@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store | ShopEasy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="store.css">
+</head>
+<body>
+
+    <div id="storeLoading" class="store-loading">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <div id="storeNotFound" class="store-not-found" style="display:none;">
+        <div class="not-found-content">
+            <i class="fas fa-store-slash"></i>
+            <h1>Store Not Found</h1>
+            <p>The store you're looking for doesn't exist or has been removed.</p>
+            <a href="index.html" class="btn-primary">Go to ShopEasy</a>
+        </div>
+    </div>
+
+    <div id="storeApp" style="display:none;">
+        <nav class="store-nav" id="storeNav">
+            <div class="container nav-inner">
+                <a href="#" class="store-logo-link">
+                    <img id="storeLogo" src="" alt="" class="store-logo" style="display:none;">
+                    <span id="storeName" class="store-name-text"></span>
+                </a>
+                <ul class="store-nav-links" id="storeNavLinks">
+                    <li><a href="#products-section">Products</a></li>
+                    <li><a href="#about-section">About</a></li>
+                    <li><a href="#contact-section">Contact</a></li>
+                </ul>
+                <div class="store-nav-actions">
+                    <a id="storeFbLink" href="#" target="_blank" class="btn-order-nav">
+                        <i class="fab fa-facebook-messenger"></i> Order
+                    </a>
+                    <button class="mobile-toggle" id="mobileToggle">
+                        <span></span><span></span><span></span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <section class="store-hero" id="storeHero">
+            <div class="container">
+                <div class="hero-inner">
+                    <h1 id="heroStoreName" class="hero-store-name"></h1>
+                    <p id="heroStoreDesc" class="hero-store-desc"></p>
+                    <div class="hero-actions">
+                        <a href="#products-section" class="btn-hero-primary">
+                            Browse Products <i class="fas fa-arrow-down"></i>
+                        </a>
+                        <a id="heroFbLink" href="#" target="_blank" class="btn-hero-outline">
+                            <i class="fab fa-facebook-messenger"></i> Message Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="store-products" id="products-section">
+            <div class="container">
+                <div class="section-head">
+                    <h2>Our Products</h2>
+                    <p>Browse our collection</p>
+                </div>
+                <div class="filter-bar" id="filterBar">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                </div>
+                <div class="products-grid" id="productsGrid"></div>
+            </div>
+        </section>
+
+        <section class="store-about" id="about-section">
+            <div class="container">
+                <div class="about-grid">
+                    <div class="about-text">
+                        <h2>About Us</h2>
+                        <p id="aboutDesc"></p>
+                    </div>
+                    <div class="about-features" id="aboutFeatures">
+                        <div class="about-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Quality Products</span>
+                        </div>
+                        <div class="about-feature">
+                            <i class="fas fa-truck"></i>
+                            <span>Fast Delivery</span>
+                        </div>
+                        <div class="about-feature">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Trusted Store</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="store-contact" id="contact-section">
+            <div class="container">
+                <div class="section-head">
+                    <h2>Contact Us</h2>
+                    <p>Get in touch with us</p>
+                </div>
+                <div class="contact-grid">
+                    <div class="contact-card" id="contactPhone" style="display:none;">
+                        <i class="fas fa-phone"></i>
+                        <h3>Phone</h3>
+                        <p id="contactPhoneText"></p>
+                    </div>
+                    <div class="contact-card" id="contactEmail" style="display:none;">
+                        <i class="fas fa-envelope"></i>
+                        <h3>Email</h3>
+                        <p id="contactEmailText"></p>
+                    </div>
+                    <div class="contact-card" id="contactAddress" style="display:none;">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h3>Address</h3>
+                        <p id="contactAddressText"></p>
+                    </div>
+                    <div class="contact-card" id="contactFb" style="display:none;">
+                        <i class="fab fa-facebook-f"></i>
+                        <h3>Facebook</h3>
+                        <a id="contactFbLink" href="#" target="_blank">Message Us</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="store-footer">
+            <div class="container">
+                <div class="footer-inner">
+                    <div class="footer-brand">
+                        <span id="footerStoreName"></span>
+                        <p>Powered by <a href="index.html">ShopEasy</a></p>
+                    </div>
+                    <div class="footer-links">
+                        <a href="#products-section">Products</a>
+                        <a href="#about-section">About</a>
+                        <a href="#contact-section">Contact</a>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2026 <span id="footerCopyright"></span>. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+
+        <a href="#" class="back-to-top" id="backToTop">
+            <i class="fas fa-chevron-up"></i>
+        </a>
+    </div>
+
+    <div class="modal-overlay" id="productModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeProductModal()"><i class="fas fa-times"></i></button>
+            <div class="modal-body">
+                <div class="modal-image">
+                    <img id="modalImg" src="" alt="">
+                </div>
+                <div class="modal-info">
+                    <span class="modal-badge" id="modalBadge" style="display:none;"></span>
+                    <h2 id="modalName"></h2>
+                    <p class="modal-category" id="modalCategory"></p>
+                    <p class="modal-desc" id="modalDesc"></p>
+                    <div class="modal-price">
+                        <span class="modal-current" id="modalPrice"></span>
+                        <span class="modal-old" id="modalOldPrice"></span>
+                    </div>
+                    <div class="modal-actions">
+                        <a id="modalOrderLink" href="#" target="_blank" class="btn-order">
+                            <i class="fab fa-facebook-messenger"></i> Order Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="store.js"></script>
+</body>
+</html>

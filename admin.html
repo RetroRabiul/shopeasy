@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Admin | ShopEasy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+    <div id="loginScreen" class="login-screen">
+        <div class="login-box">
+            <div class="login-icon"><i class="fas fa-shield-alt"></i></div>
+            <h2>Super Admin</h2>
+            <p>Platform administration panel</p>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <input type="email" id="loginEmail" placeholder="Admin email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                </div>
+                <p id="loginError" class="error-msg"></p>
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Log In
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="adminApp" class="admin-app" style="display:none;">
+        <nav class="admin-nav">
+            <div class="admin-nav-left">
+                <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+                <div class="admin-brand">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>ShopEasy Admin</span>
+                </div>
+            </div>
+            <div class="admin-nav-right">
+                <a href="index.html" class="btn-site" target="_blank"><i class="fas fa-external-link-alt"></i> View Site</a>
+                <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </nav>
+
+        <div class="admin-layout">
+            <aside class="admin-sidebar" id="adminSidebar">
+                <div class="sidebar-section">
+                    <span class="sidebar-label">Overview</span>
+                    <button class="sidebar-btn active" data-tab="dashboard" onclick="switchTab('dashboard')">
+                        <i class="fas fa-chart-pie"></i> Dashboard
+                    </button>
+                </div>
+                <div class="sidebar-section">
+                    <span class="sidebar-label">Management</span>
+                    <button class="sidebar-btn" data-tab="stores" onclick="switchTab('stores')">
+                        <i class="fas fa-store"></i> All Stores
+                    </button>
+                    <button class="sidebar-btn" data-tab="users" onclick="switchTab('users')">
+                        <i class="fas fa-users"></i> Users
+                    </button>
+                    <button class="sidebar-btn" data-tab="orders" onclick="switchTab('orders')">
+                        <i class="fas fa-shopping-bag"></i> All Orders
+                    </button>
+                </div>
+                <div class="sidebar-section">
+                    <span class="sidebar-label">Platform</span>
+                    <button class="sidebar-btn" data-tab="settings" onclick="switchTab('settings')">
+                        <i class="fas fa-cog"></i> Settings
+                    </button>
+                </div>
+            </aside>
+
+            <main class="admin-main">
+                <!-- Dashboard Tab -->
+                <div id="tab-dashboard" class="tab-content active">
+                    <div class="page-header">
+                        <h1>Platform Dashboard</h1>
+                        <p>Overview of your platform</p>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon blue"><i class="fas fa-store"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="statStores">0</span>
+                                <span class="stat-label">Total Stores</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon green"><i class="fas fa-users"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="statUsers">0</span>
+                                <span class="stat-label">Total Users</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon purple"><i class="fas fa-box"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="statProducts">0</span>
+                                <span class="stat-label">Total Products</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon orange"><i class="fas fa-shopping-bag"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="statOrders">0</span>
+                                <span class="stat-label">Total Orders</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="overview-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Recent Stores</h3>
+                            </div>
+                            <div id="recentStores" class="recent-list"></div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Recent Orders</h3>
+                            </div>
+                            <div id="recentOrders" class="recent-list"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stores Tab -->
+                <div id="tab-stores" class="tab-content">
+                    <div class="page-header">
+                        <h1>All Stores <span class="count-badge" id="storeCount">0</span></h1>
+                    </div>
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="storeSearch" placeholder="Search stores..." oninput="filterStores()">
+                    </div>
+                    <div id="storesList" class="stores-list"></div>
+                </div>
+
+                <!-- Users Tab -->
+                <div id="tab-users" class="tab-content">
+                    <div class="page-header">
+                        <h1>All Users <span class="count-badge" id="userCount">0</span></h1>
+                    </div>
+                    <div id="usersList" class="users-list"></div>
+                </div>
+
+                <!-- Orders Tab -->
+                <div id="tab-orders" class="tab-content">
+                    <div class="page-header">
+                        <h1>All Orders <span class="count-badge" id="orderCount">0</span></h1>
+                    </div>
+                    <div id="ordersList" class="orders-list"></div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div id="tab-settings" class="tab-content">
+                    <div class="page-header">
+                        <h1>Platform Settings</h1>
+                        <p>Configure platform-wide settings</p>
+                    </div>
+                    <div class="settings-form">
+                        <div class="card">
+                            <h3>Platform Info</h3>
+                            <div class="form-group">
+                                <label>Platform Name</label>
+                                <input type="text" id="platformName" value="ShopEasy">
+                            </div>
+                            <div class="form-group">
+                                <label>Support Email</label>
+                                <input type="email" id="supportEmail" placeholder="support@shopeasy.com">
+                            </div>
+                            <button class="btn-primary" onclick="savePlatformSettings()">
+                                <i class="fas fa-save"></i> Save Settings
+                            </button>
+                        </div>
+                        <div class="card">
+                            <h3>Danger Zone</h3>
+                            <p>These actions are irreversible. Proceed with caution.</p>
+                            <button class="btn-danger" onclick="clearPlatform()">
+                                <i class="fas fa-trash-alt"></i> Reset All Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Store Detail Modal -->
+    <div class="modal-overlay" id="storeModal">
+        <div class="modal modal-lg">
+            <button class="modal-close" onclick="closeStoreModal()"><i class="fas fa-times"></i></button>
+            <div id="storeModalContent"></div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script type="module" src="admin.js"></script>
+</body>
+</html>
