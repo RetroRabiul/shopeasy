@@ -151,6 +151,14 @@ function applyStoreData() {
         const logo = document.getElementById('storeLogo');
         logo.src = store.logo;
         logo.style.display = 'block';
+        
+        let favicon = document.querySelector('link[rel="icon"]');
+        if (!favicon) {
+            favicon = document.createElement('link');
+            favicon.rel = 'icon';
+            document.head.appendChild(favicon);
+        }
+        favicon.href = store.logo;
     }
 
     document.getElementById('storeName').textContent = store.name;
