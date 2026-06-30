@@ -87,8 +87,19 @@ export async function handleLogin(e) {
         errorEl.textContent = '';
         hideModal();
         showToast('Login successful!', 'success');
+
+        const { data: profile } = await sb
+            .from('profiles')
+            .select('role')
+            .eq('id', data.user.id)
+            .single();
+
         setTimeout(() => {
-            window.location.href = 'dashboard.html';
+            if (profile && profile.role === 'admin') {
+                window.location.href = 'admin.html';
+            } else {
+                window.location.href = 'dashboard.html';
+            }
         }, 500);
     }
 }

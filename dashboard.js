@@ -19,6 +19,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
+    const { data: profile } = await sb
+        .from('profiles')
+        .select('role')
+        .eq('id', session.user.id)
+        .single();
+
+    if (profile && profile.role === 'admin') {
+        window.location.href = 'admin.html';
+        return;
+    }
+
     await loadStore(session.user.id);
     document.getElementById('loadingScreen').style.display = 'none';
     document.getElementById('dashboardApp').style.display = 'block';
