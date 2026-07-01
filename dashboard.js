@@ -49,8 +49,11 @@ async function loadStore(userId) {
 
     store = data;
     document.getElementById('storeNameDisplay').textContent = store.name;
-    document.getElementById('previewLink').href = `store.html?store=${store.slug}`;
-    document.getElementById('statStoreUrl').textContent = store.slug + '.shopeasy.com';
+    const storeUrl = `store.html?store=${store.slug}`;
+    document.getElementById('previewLink').href = storeUrl;
+    const statUrl = document.getElementById('statStoreUrl');
+    statUrl.textContent = store.slug + '.shopeasy.com';
+    statUrl.href = storeUrl;
 
     loadStoreSettings();
     loadThemeSettings();
