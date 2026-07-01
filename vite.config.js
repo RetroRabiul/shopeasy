@@ -8,6 +8,11 @@ export default defineConfig({
                 dashboard: './dashboard.html',
                 store: './store.html',
                 admin: './admin.html'
+            },
+            output: {
+                entryFileNames: 'assets/[name]-[hash].js',
+                chunkFileNames: 'assets/[name]-[hash].js',
+                assetFileNames: 'assets/[name]-[hash].[ext]'
             }
         }
     }

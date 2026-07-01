@@ -13,6 +13,12 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div id="routerLoading" style="position:fixed;inset:0;background:#0a0a0f;display:flex;align-items:center;justify-content:center;z-index:99999;">
+        <div style="width:40px;height:40px;border:3px solid rgba(99,102,241,0.2);border-top-color:#6366f1;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+    </div>
+    <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+
+    <div id="landingContent" style="display:none;">
 
     <nav class="navbar" id="navbar">
         <div class="container nav-container">
@@ -436,6 +442,7 @@
 
     <div id="toast" class="toast"></div>
 
+    <script type="module" src="router.js"></script>
     <script type="module" src="script.js"></script>
 </body>
 </html>

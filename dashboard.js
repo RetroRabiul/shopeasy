@@ -1,4 +1,5 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+import { isAdminSubdomain, getStoreSubdomain } from './router.js'
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -26,8 +27,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         .single();
 
     if (profile && profile.role === 'admin') {
-        window.location.href = 'admin.html';
-        return;
+        const currentHost = window.location.hostname;
+        if (!isAdminSubdomain() && !currentHost.includes('localhost') && !currentHost.includes('vercel.app')) {
+            const { data: userStore } = await sb
+                .from('stores')
+                .select('slug')
+                .eq('owner_id', session.user.id)
+                .single();
+            
+            if (userStore) {
+                const parts = currentHost.split('.');
+                const baseDomain = parts.length >= 3 ? parts.slice(1).join('.') : currentHost;
+                window.location.href = `https://admin.${userStore.slug}.${baseDomain}/dashboard.html`;
+                return;
+            }
+        }
     }
 
     await loadStore(session.user.id);
@@ -54,6 +68,16 @@ async function loadStore(userId) {
     const statUrl = document.getElementById('statStoreUrl');
     statUrl.textContent = store.slug + '.shopeasy.com';
     statUrl.href = storeUrl;
+
+    const currentHost = window.location.hostname;
+    if (!currentHost.includes('localhost') && !currentHost.includes('vercel.app')) {
+        const parts = currentHost.split('.');
+        const baseDomain = parts.length >= 3 ? parts.slice(1).join('.') : currentHost;
+        const fullStoreUrl = `https://${store.slug}.${baseDomain}/`;
+        statUrl.textContent = `${store.slug}.${baseDomain}`;
+        statUrl.href = fullStoreUrl;
+        document.getElementById('previewLink').href = fullStoreUrl;
+    }
 
     loadStoreSettings();
     loadThemeSettings();

@@ -1,10 +1,38 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+import { routeBySubdomain, isAdminSubdomain, getStoreSubdomain } from './router.js'
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+document.addEventListener('DOMContentLoaded', async () => {
+    const route = await routeBySubdomain();
+    const loading = document.getElementById('routerLoading');
+    const landingContent = document.getElementById('landingContent');
+
+    if (route === 'admin') {
+        window.location.href = 'dashboard.html';
+        return;
+    }
+
+    if (route === 'store') {
+        window.location.href = `store.html?store=${getStoreSubdomain()}`;
+        return;
+    }
+
+    if (route === 'notfound') {
+        loading.innerHTML = '<div style="text-align:center;color:#e2e8f0;"><h1 style="font-size:48px;margin-bottom:16px;">Store Not Found</h1><p style="color:#94a3b8;margin-bottom:24px;">The store you\'re looking for doesn\'t exist.</p><a href="/" style="color:#6366f1;">Go to ShopEasy</a></div>';
+        return;
+    }
+
+    if (loading) loading.style.display = 'none';
+    if (landingContent) landingContent.style.display = 'block';
+
+    initLandingPage();
+});
+
+function initLandingPage() {
 const navbar = document.getElementById('navbar');
 const hamburger = document.getElementById('hamburger');
 const navLinks = document.getElementById('navLinks');
@@ -94,11 +122,24 @@ export async function handleLogin(e) {
             .eq('id', data.user.id)
             .single();
 
-        setTimeout(() => {
+        setTimeout(async () => {
             if (profile && profile.role === 'admin') {
                 window.location.href = 'admin.html';
             } else {
-                window.location.href = 'dashboard.html';
+                const { data: store } = await sb
+                    .from('stores')
+                    .select('slug')
+                    .eq('owner_id', data.user.id)
+                    .single();
+                
+                if (store) {
+                    const host = window.location.hostname;
+                    const parts = host.split('.');
+                    const baseDomain = parts.length >= 3 ? parts.slice(1).join('.') : host;
+                    window.location.href = `https://admin.${store.slug}.${baseDomain}/`;
+                } else {
+                    window.location.href = 'dashboard.html';
+                }
             }
         }, 500);
     }
@@ -169,7 +210,10 @@ export async function handleSignup(e) {
         hideModal();
         showToast('Store created! Please check your email to verify.', 'success');
         setTimeout(() => {
-            window.location.href = 'dashboard.html';
+            const host = window.location.hostname;
+            const parts = host.split('.');
+            const baseDomain = parts.length >= 3 ? parts.slice(1).join('.') : host;
+            window.location.href = `https://${subdomain}.${baseDomain}/`;
         }, 1500);
     }
 }
@@ -194,3 +238,5 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 });
+
+}
