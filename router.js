@@ -7,7 +7,7 @@ const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 export function isCustomDomain() {
     const host = window.location.hostname;
-    return !host.includes('vercel.app') && !host.includes('localhost') && host.split('.').length >= 3;
+    return !host.includes('vercel.app') && !host.includes('localhost') && host.split('.').length >= 2;
 }
 
 export function getSubdomain() {
@@ -41,26 +41,30 @@ export function getStoreSlugFromPath() {
     return null;
 }
 
+export async function getStoreByCustomDomain() {
+    const host = window.location.hostname;
+    const { data, error } = await sb.rpc('get_store_by_domain', { domain: host });
+    
+    if (error || !data || data.length === 0) return null;
+    return data[0];
+}
+
 export async function routeBySubdomain() {
-    if (!isCustomDomain()) {
-        const pathSlug = getStoreSlugFromPath();
-        if (pathSlug) return 'store';
-        return 'landing';
+    // Check if this is a custom domain
+    if (isCustomDomain()) {
+        const store = await getStoreByCustomDomain();
+        if (store) {
+            return isAdminSubdomain() ? 'admin' : 'store';
+        }
+        // Custom domain but not verified/registered
+        return 'notfound';
     }
 
-    const isAdmin = isAdminSubdomain();
-    const storeSlug = getStoreSubdomain();
-
-    if (!storeSlug) return 'landing';
-
-    const { data: store, error } = await sb
-        .from('stores')
-        .select('id, slug, owner_id')
-        .eq('slug', storeSlug)
-        .single();
-
-    if (error || !store) return 'notfound';
-    return isAdmin ? 'admin' : 'store';
+    // Default Vercel domain - use path-based routing
+    const pathSlug = getStoreSlugFromPath();
+    if (pathSlug) return 'store';
+    
+    return 'landing';
 }
 
 export function getStoreUrl(slug) {

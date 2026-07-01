@@ -90,6 +90,24 @@ function loadStoreSettings() {
         const preview = document.getElementById('logoPreview');
         preview.innerHTML = `<img src="${store.logo}" alt="Logo">`;
     }
+
+    if (store.custom_domain) {
+        document.getElementById('customDomain').value = store.custom_domain;
+        document.getElementById('domainStatus').style.display = 'block';
+        
+        if (store.domain_verified) {
+            document.getElementById('domainStatusBadge').className = 'status-badge verified';
+            document.getElementById('domainStatusBadge').innerHTML = '<i class="fas fa-check-circle"></i> Verified';
+        } else {
+            document.getElementById('domainStatusBadge').className = 'status-badge pending';
+            document.getElementById('domainStatusBadge').innerHTML = '<i class="fas fa-clock"></i> Pending Verification';
+            document.getElementById('domainInstructions').style.display = 'block';
+            document.getElementById('dnsValue').textContent = store.domain_verification_token || '';
+        }
+        
+        document.getElementById('addDomainBtn').disabled = true;
+        document.getElementById('customDomain').disabled = true;
+    }
 }
 
 function loadThemeSettings() {
@@ -534,6 +552,74 @@ export async function saveStoreSettings(e) {
     showToast('Settings saved!', 'success');
 }
 window.saveStoreSettings = saveStoreSettings;
+
+export async function addCustomDomain() {
+    const domain = document.getElementById('customDomain').value.trim().toLowerCase();
+    
+    if (!domain) {
+        showToast('Please enter a domain', 'error');
+        return;
+    }
+
+    if (!domain.includes('.')) {
+        showToast('Please enter a valid domain', 'error');
+        return;
+    }
+
+    const token = 'shopeasy-verify-' + Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+
+    const { error } = await sb
+        .from('stores')
+        .update({
+            custom_domain: domain,
+            domain_verified: false,
+            domain_verification_token: token
+        })
+        .eq('id', store.id);
+
+    if (error) {
+        if (error.code === '23505') {
+            showToast('This domain is already in use', 'error');
+        } else {
+            showToast('Failed to add domain', 'error');
+        }
+        return;
+    }
+
+    document.getElementById('domainStatus').style.display = 'block';
+    document.getElementById('domainStatusBadge').className = 'status-badge pending';
+    document.getElementById('domainStatusBadge').innerHTML = '<i class="fas fa-clock"></i> Pending Verification';
+    
+    document.getElementById('domainInstructions').style.display = 'block';
+    document.getElementById('dnsValue').textContent = token;
+    
+    document.getElementById('addDomainBtn').disabled = true;
+    document.getElementById('customDomain').disabled = true;
+
+    showToast('Domain added! Please verify ownership.', 'info');
+}
+window.addCustomDomain = addCustomDomain;
+
+export async function verifyDomain() {
+    showToast('Checking DNS records...', 'info');
+
+    const { data, error } = await sb.rpc('verify_custom_domain', {
+        store_id: store.id,
+        token: store.domain_verification_token
+    });
+
+    if (error || !data) {
+        showToast('Verification failed. Please add the DNS record first.', 'error');
+        return;
+    }
+
+    document.getElementById('domainStatusBadge').className = 'status-badge verified';
+    document.getElementById('domainStatusBadge').innerHTML = '<i class="fas fa-check-circle"></i> Verified';
+    document.getElementById('domainInstructions').style.display = 'none';
+
+    showToast('Domain verified successfully!', 'success');
+}
+window.verifyDomain = verifyDomain;
 
 export function previewLogo(e) {
     const file = e.target.files[0];

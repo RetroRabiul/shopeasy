@@ -213,6 +213,44 @@
                                 <input type="text" id="settingWhatsapp" placeholder="+880...">
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label>Custom Domain</label>
+                            <div class="custom-domain-section">
+                                <div class="input-row">
+                                    <input type="text" id="customDomain" placeholder="www.yourstore.com" disabled>
+                                    <button type="button" class="btn-primary" onclick="addCustomDomain()" id="addDomainBtn">
+                                        <i class="fas fa-plus"></i> Add Domain
+                                    </button>
+                                </div>
+                                <div id="domainStatus" class="domain-status" style="display:none;">
+                                    <div class="status-badge" id="domainStatusBadge">
+                                        <i class="fas fa-clock"></i> Pending Verification
+                                    </div>
+                                </div>
+                                <div id="domainInstructions" class="domain-instructions" style="display:none;">
+                                    <h4>Verify Your Domain</h4>
+                                    <p>Add this TXT record to your DNS:</p>
+                                    <div class="dns-record">
+                                        <div class="dns-label">Type</div>
+                                        <div class="dns-value">TXT</div>
+                                    </div>
+                                    <div class="dns-record">
+                                        <div class="dns-label">Name</div>
+                                        <div class="dns-value" id="dnsName">_shopeasy-verify</div>
+                                    </div>
+                                    <div class="dns-record">
+                                        <div class="dns-label">Value</div>
+                                        <div class="dns-value" id="dnsValue">shopeasy-verify-...</div>
+                                    </div>
+                                    <button type="button" class="btn-outline" onclick="verifyDomain()" style="margin-top:12px;">
+                                        <i class="fas fa-check-circle"></i> Verify Now
+                                    </button>
+                                </div>
+                                <small style="color:var(--text-dim);margin-top:8px;display:block;">
+                                    After verification, add a CNAME record pointing to <code>cname.vercel-dns.com</code>
+                                </small>
+                            </div>
+                        </div>
                         <div class="form-actions">
                             <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Save Settings</button>
                         </div>

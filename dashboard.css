@@ -675,6 +675,98 @@ body {
     font-size: 12px;
 }
 
+.custom-domain-section {
+    padding: 16px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+.input-row {
+    display: flex;
+    gap: 8px;
+}
+
+.input-row input {
+    flex: 1;
+}
+
+.domain-status {
+    margin-top: 12px;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.status-badge.pending {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--warning);
+}
+
+.status-badge.verified {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--success);
+}
+
+.domain-instructions {
+    margin-top: 16px;
+    padding: 16px;
+    background: var(--bg-elevated);
+    border-radius: 8px;
+}
+
+.domain-instructions h4 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.domain-instructions p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+.dns-record {
+    display: flex;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.dns-record:last-child {
+    border-bottom: none;
+}
+
+.dns-label {
+    width: 60px;
+    font-size: 12px;
+    color: var(--text-dim);
+    font-weight: 500;
+}
+
+.dns-value {
+    flex: 1;
+    font-size: 13px;
+    font-family: monospace;
+    color: var(--text);
+    word-break: break-all;
+}
+
+code {
+    background: var(--bg-elevated);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
 .form-group input,
 .form-group select,
 .form-group textarea {

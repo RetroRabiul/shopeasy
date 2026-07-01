@@ -1,5 +1,5 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
-import { getStoreSubdomain, getStoreSlugFromPath } from './router.js'
+import { getStoreSubdomain, getStoreSlugFromPath, getStoreByCustomDomain } from './router.js'
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -13,6 +13,19 @@ let fbLink = '';
 document.addEventListener('DOMContentLoaded', async () => {
     const slug = getStoreSlug();
     if (!slug) {
+        // Try custom domain
+        const customStore = await getStoreByCustomDomain();
+        if (customStore) {
+            store = customStore;
+            fbLink = store.facebook_link || '#';
+            applyTheme();
+            applyStoreData();
+            await loadProducts();
+            document.getElementById('storeLoading').style.display = 'none';
+            document.getElementById('storeApp').style.display = 'block';
+            initScrollEffects();
+            return;
+        }
         showNotFound();
         return;
     }
