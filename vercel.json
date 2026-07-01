@@ -2,7 +2,7 @@
     "buildCommand": "vite build",
     "outputDirectory": "dist",
     "rewrites": [
-        { "source": "/store", "destination": "/store.html" },
+        { "source": "/store/:slug", "destination": "/store.html?store=:slug" },
         { "source": "/dashboard", "destination": "/dashboard.html" },
         { "source": "/admin", "destination": "/admin.html" }
     ],

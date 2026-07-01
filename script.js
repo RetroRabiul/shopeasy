@@ -1,5 +1,5 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
-import { routeBySubdomain, isAdminSubdomain, getStoreSubdomain } from './router.js'
+import { routeBySubdomain, getStoreSubdomain, getStoreUrl, getAdminUrl } from './router.js'
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -133,10 +133,7 @@ function initLandingPage() {
                         .single();
 
                     if (store) {
-                        const host = window.location.hostname;
-                        const parts = host.split('.');
-                        const baseDomain = parts.length >= 3 ? parts.slice(1).join('.') : host;
-                        window.location.href = `https://admin.${store.slug}.${baseDomain}/`;
+                        window.location.href = getAdminUrl(store.slug);
                     } else {
                         window.location.href = 'dashboard.html';
                     }
@@ -210,10 +207,7 @@ function initLandingPage() {
             hideModal();
             showToast('Store created! Please check your email to verify.', 'success');
             setTimeout(() => {
-                const host = window.location.hostname;
-                const parts = host.split('.');
-                const baseDomain = parts.length >= 3 ? parts.slice(1).join('.') : host;
-                window.location.href = `https://${subdomain}.${baseDomain}/`;
+                window.location.href = getStoreUrl(subdomain);
             }, 1500);
         }
     }

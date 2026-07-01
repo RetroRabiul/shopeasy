@@ -1,5 +1,5 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
-import { getStoreSubdomain } from './router.js'
+import { getStoreSubdomain, getStoreSlugFromPath } from './router.js'
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -25,7 +25,7 @@ function getStoreSlug() {
     const querySlug = params.get('store');
     if (querySlug) return querySlug;
 
-    return getStoreSubdomain();
+    return getStoreSlugFromPath() || getStoreSubdomain();
 }
 
 async function loadStore(slug) {
