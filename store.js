@@ -186,6 +186,15 @@ function applyStoreData() {
         document.getElementById('contactFb').style.display = 'block';
         document.getElementById('contactFbLink').href = store.facebook_link;
     }
+    if (store.whatsapp_link) {
+        document.getElementById('contactWhatsapp').style.display = 'block';
+        const waLink = store.whatsapp_link.startsWith('http')
+            ? store.whatsapp_link
+            : `https://wa.me/${store.whatsapp_link.replace(/[^0-9]/g, '')}`;
+        document.getElementById('contactWhatsappLink').href = waLink;
+        document.getElementById('storeWaLink').href = waLink;
+        document.getElementById('storeWaLink').style.display = 'flex';
+    }
 }
 
 async function loadProducts() {
@@ -326,6 +335,16 @@ export function openProductModal(index) {
 
     document.getElementById('modalOrderLink').href = fbLink;
     document.getElementById('modalOrderLink').style.background = primary;
+
+    if (store.whatsapp_link) {
+        const waLink = store.whatsapp_link.startsWith('http')
+            ? store.whatsapp_link
+            : `https://wa.me/${store.whatsapp_link.replace(/[^0-9]/g, '')}`;
+        document.getElementById('modalWaLink').href = waLink;
+        document.getElementById('modalWaLink').style.display = 'flex';
+    } else {
+        document.getElementById('modalWaLink').style.display = 'none';
+    }
 
     modal.classList.add('active');
 }
